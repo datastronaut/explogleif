@@ -8,9 +8,7 @@ from explogleif.entity import Entity
 def latest_status(country=None, category=None, status=None):
     url = "https://api.gleif.org/api/v1/lei-records"
 
-    headers = {"Accept": "application/vnd.api+json"}
-
-    payload = {
+    params = {
         # Country code (2 letters)
         "filter[entity.legalAddress.country]": country,
         # Entity category
@@ -24,11 +22,10 @@ def latest_status(country=None, category=None, status=None):
         "page[size]": 1,  # Must be between 1 and 200.
     }
 
-    response = requests.request("GET", url, headers=headers, data=payload).json()
+    response = requests.request(url, params=params).json()
 
-    lei_count = response["meta"]["pagination"][
-        "total"
-    ]  # pagination is 1 entity per page, so number of pages = number of entities
+    # pagination is 1 entity per page, so number of pages = number of entities
+    lei_count = response["meta"]["pagination"]["total"]
     latest_entity = Entity(
         name=response["data"][0]["attributes"]["entity"]["legalName"]["name"],
         lei=response["data"][0]["attributes"]["lei"],
@@ -39,3 +36,13 @@ def latest_status(country=None, category=None, status=None):
     answer = {"lei_count": lei_count, "latest_entity": latest_entity}
 
     return answer
+
+
+def search_entities(user_input):
+    url = "https://api.gleif.org/api/v1/fuzzycompletions"
+
+    params = {"field": "entity.legalName", "q": user_input}
+
+    response = requests.request(url, params=params).json()
+
+    return None
