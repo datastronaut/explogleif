@@ -50,3 +50,10 @@ The latest entity registered is {latest_entity.name}.
 It is located in {latest_entity.city}, {latest_entity.country}.  
 Its LEI is {latest_entity.lei}.
 """
+
+"""
+### Search for an Entity
+"""
+
+user_input = st.text_input("Search for a company here")
+
