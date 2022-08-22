@@ -9,8 +9,8 @@ from explogleif import explogleif
 # web page configuration
 st.set_page_config(
     page_title="EXPLO GLEIF - exploration of GLEIF API",
-    page_icon=":cl:" # Clear Button emoji
-    )
+    page_icon=":cl:",  # Clear Button emoji
+)
 
 # sidebar
 st.sidebar.markdown(
@@ -35,7 +35,7 @@ The API documentation [can be found here](https://documenter.getpostman.com/view
 now = datetime.now()
 gleif_status = explogleif.latest_status()
 
-lei_count = gleif_status['lei_count']
+lei_count = gleif_status["lei_count"]
 latest_entity = gleif_status["latest_entity"]
 
 
@@ -56,4 +56,3 @@ Its LEI is {latest_entity.lei}.
 """
 
 user_input = st.text_input("Search for a company here")
-
