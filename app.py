@@ -12,6 +12,20 @@ st.set_page_config(
     page_icon=":cl:" # Clear Button emoji
     )
 
+# sidebar
+st.sidebar.markdown(
+    """
+    App developped by Christian Lajouanie.  
+    :necktie: Follow me on [LinkedIn](https://www.linkedin.com/in/christianlajouanie)  
+    :octopus: Check my [GitHub profile](https://github.com/ClearButton)  
+      
+      
+      
+    :cl:
+    """
+)
+
+
 """
 # EXPLOGLEIF  
 This app is meant to explore the API of the [Global Legal Entity Identifier Foundation](https://www.gleif.org).  
@@ -38,8 +52,4 @@ f"""
 The latest entity registered is {latest_entity.name}.  
 It is located in {latest_entity.city}, {latest_entity.country}.  
 Its LEI is {latest_entity.lei}.
-"""
-
-"""
-:cl:
 """
