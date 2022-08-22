@@ -18,9 +18,6 @@ st.sidebar.markdown(
     App developped by Christian Lajouanie.  
     :necktie: Follow me on [LinkedIn](https://www.linkedin.com/in/christianlajouanie)  
     :octopus: Check my [GitHub profile](https://github.com/ClearButton)  
-      
-      
-      
     :cl:
     """
 )
