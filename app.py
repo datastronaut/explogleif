@@ -61,9 +61,11 @@ if user_input:
     entities_df, total_number_of_results = explogleif.search_entities(user_input)
     if total_number_of_results > 200:
         st.warning(
-            f"Your query returns {total_number_of_results} results. Only the first 200 results are displayed here."
+            f'"{user_input}" returns {total_number_of_results} results. Only the first 200 results are displayed here.'
         )
+        st.dataframe(data=entities_df)
+    elif total_number_of_results == 0:
+        st.error(f'"{user_input}" does not match any entity in GLEIF database.')
     else:
-        st.success(f"Your query returns {total_number_of_results} results.")
-
-    st.dataframe(data=entities_df)
+        st.success(f'"{user_input}" returns {total_number_of_results} results.')
+        st.dataframe(data=entities_df)
