@@ -24,7 +24,7 @@ st.sidebar.markdown(
 
 
 """
-# EXPLOGLEIF  
+# EXPLO GLEIF  
 This app is meant to explore the API of the [Global Legal Entity Identifier Foundation](https://www.gleif.org).  
 The API documentation [can be found here](https://documenter.getpostman.com/view/7679680/SVYrrxuU?version=latest#quick-start-guide).  
   
@@ -56,3 +56,14 @@ Its LEI is {latest_entity.lei}.
 """
 
 user_input = st.text_input("Search for a company here")
+
+if user_input:
+    entities_df, total_number_of_results = explogleif.search_entities(user_input)
+    if total_number_of_results > 200:
+        st.warning(
+            f"Your query returns {total_number_of_results} results. Only the first 200 results are displayed here."
+        )
+    else:
+        st.success(f"Your query returns {total_number_of_results} results.")
+
+    st.dataframe(data=entities_df)
