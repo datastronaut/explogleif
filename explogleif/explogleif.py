@@ -2,6 +2,7 @@
 ## custom functions needed to explore gleif API
 
 import requests
+import pandas as pd
 from explogleif.entity import Entity
 
 
@@ -22,7 +23,7 @@ def latest_status(country=None, category=None, status=None):
         "page[size]": 1,  # Must be between 1 and 200.
     }
 
-    response = requests.request(url, params=params).json()
+    response = requests.get(url, params=params).json()
 
     # pagination is 1 entity per page, so number of pages = number of entities
     lei_count = response["meta"]["pagination"]["total"]
@@ -38,11 +39,36 @@ def latest_status(country=None, category=None, status=None):
     return answer
 
 
-def search_entities(user_input):
-    url = "https://api.gleif.org/api/v1/fuzzycompletions"
+def search_entities(user_input, page_number=1, page_size=200):
+    url = "https://api.gleif.org/api/v1/lei-records"
 
-    params = {"field": "entity.legalName", "q": user_input}
+    params = {
+        "filter[entity.names]": user_input,
+        "page[number]": page_number,
+        "page[size]": page_size,
+    }
 
-    response = requests.request(url, params=params).json()
+    response = requests.get(url, params=params).json()
 
-    return None
+    entity_list = []
+
+    for json_entity in response["data"]:
+        new_entity = Entity(
+            name=json_entity["attributes"]["entity"]["legalName"]["name"],
+            lei=json_entity["id"],
+            city=json_entity["attributes"]["entity"]["legalAddress"]["city"],
+            country=json_entity["attributes"]["entity"]["legalAddress"]["country"],
+        )
+        entity_list.append(new_entity)
+
+    entity_dict = {"name": [], "lei": [], "city": [], "country": []}
+
+    for entity in entity_list:
+        entity_dict["name"].append(entity.name)
+        entity_dict["lei"].append(entity.lei)
+        entity_dict["city"].append(entity.city)
+        entity_dict["country"].append(entity.country)
+
+    entity_df = pd.DataFrame.from_dict(entity_dict)
+
+    return entity_df
