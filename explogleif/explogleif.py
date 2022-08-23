@@ -71,4 +71,6 @@ def search_entities(user_input, page_number=1, page_size=200):
 
     entity_df = pd.DataFrame.from_dict(entity_dict)
 
-    return entity_df
+    total_number_of_results = response["meta"]["pagination"]["total"]
+
+    return entity_df, total_number_of_results
