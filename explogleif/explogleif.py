@@ -39,13 +39,17 @@ def latest_status(country=None, category=None, status=None):
     return answer
 
 
-def search_entities(user_input, page_number=1, page_size=200):
+def search_entities(
+    user_input=None, page_number=1, page_size=200, owns=None, owned_by=None
+):
     url = "https://api.gleif.org/api/v1/lei-records"
 
     params = {
         "filter[entity.names]": user_input,
         "page[number]": page_number,
         "page[size]": page_size,
+        "filter[owns]": owns,
+        "filter[ownedBy]": owned_by,
     }
 
     response = requests.get(url, params=params).json()
@@ -61,16 +65,6 @@ def search_entities(user_input, page_number=1, page_size=200):
         )
         entity_list.append(new_entity)
 
-    entity_dict = {"name": [], "lei": [], "city": [], "country": []}
-
-    for entity in entity_list:
-        entity_dict["name"].append(entity.name)
-        entity_dict["lei"].append(entity.lei)
-        entity_dict["city"].append(entity.city)
-        entity_dict["country"].append(entity.country)
-
-    entity_df = pd.DataFrame.from_dict(entity_dict)
-
     total_number_of_results = response["meta"]["pagination"]["total"]
 
-    return entity_df, total_number_of_results
+    return entity_list, total_number_of_results
