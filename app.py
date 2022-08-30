@@ -52,16 +52,32 @@ Its LEI is {latest_entity.lei}.
 
 user_input = st.text_input("Search for a company here")
 
+max_number_of_results = 100
+
 if user_input:
-    entities_df, total_number_of_results = explogleif.search_entities(user_input)
+    entities_list, total_number_of_results = explogleif.search_entities(
+        user_input, page_size=max_number_of_results
+    )
     if total_number_of_results == 0:
         st.error(f'"{user_input}" does not match any entity in GLEIF database.')
     else:
-        if total_number_of_results > 200:
+        if total_number_of_results > max_number_of_results:
             st.warning(
-                f'"{user_input}" returns {total_number_of_results} results. Only the first 200 results are displayed here.'
+                f'"{user_input}" returns {total_number_of_results} results. Only the first {max_number_of_results} results are displayed here.'
             )
         else:
             st.success(f'"{user_input}" returns {total_number_of_results} results.')
 
-        st.dataframe(data=entities_df, height=230)
+        for idx, entity in enumerate(entities_list):
+            with st.expander(entity.name):
+                st.write(
+                    f"""
+                         LEI : {entity.lei}  
+                         Location: {entity.city}, {entity.country}
+                         """
+                )
+
+                if st.button("Display parent", key=f"parent_button_{idx}"):
+                    st.write("I love you Daddy")
+                if st.button("Display children", key=f"children_button_{idx}"):
+                    st.write("I love you my children")
