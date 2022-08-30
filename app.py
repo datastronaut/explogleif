@@ -55,7 +55,7 @@ user_input = st.text_input("Search for a company here")
 max_number_of_results = 100
 
 if user_input:
-    entities_list, total_number_of_results = explogleif.search_entities(
+    entities, total_number_of_results = explogleif.search_entities(
         user_input, page_size=max_number_of_results
     )
     if total_number_of_results == 0:
@@ -68,7 +68,7 @@ if user_input:
         else:
             st.success(f'"{user_input}" returns {total_number_of_results} results.')
 
-        for idx, entity in enumerate(entities_list):
+        for idx, entity in enumerate(entities):
             with st.expander(entity.name):
                 st.write(
                     f"""
@@ -77,7 +77,34 @@ if user_input:
                          """
                 )
 
-                if st.button("Display parent", key=f"parent_button_{idx}"):
-                    st.write("I love you Daddy")
-                if st.button("Display children", key=f"children_button_{idx}"):
-                    st.write("I love you my children")
+                if st.button("Parents", key=f"parents_button_{idx}"):
+                    parents, total_number_of_parents = explogleif.search_entities(
+                        page_size=max_number_of_results, owns=entity.lei
+                    )
+                    if total_number_of_parents == 0:
+                        st.write(
+                            f"{entity.name} does not have any parent registered in the GLEIF database"
+                        )
+                    else:
+                        if total_number_of_parents == 1:
+                            st.write(
+                                f"{entity.name} has 1 parent registered in the GLEIF database"
+                            )
+                        else:
+                            st.write(
+                                f"{entity.name} has {total_number_of_parents} parents registered in the GLEIF database"
+                            )
+
+                        for idx2, parent in enumerate(parents):
+                            st.write(
+                                f"""
+                                     Parent number {idx2+1}:  
+                                     **{parent.name}**  
+                                     - LEI: {parent.lei}  
+                                     - City:  {parent.city}  
+                                     - Country: {parent.country}  
+                                     """
+                            )
+
+                if st.button("Children", key=f"children_button_{idx}"):
+                    st.write("This app cannot display children yet")
