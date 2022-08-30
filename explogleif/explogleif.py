@@ -61,17 +61,6 @@ def search_entities(user_input, page_number=1, page_size=200):
         )
         entity_list.append(new_entity)
 
-    entity_dict = {"name": [], "lei": [], "city": [], "country": []}
-
-    for entity in entity_list:
-        entity_dict["name"].append(entity.name)
-        entity_dict["lei"].append(entity.lei)
-        entity_dict["city"].append(entity.city)
-        entity_dict["country"].append(entity.country)
-
-    entity_df = pd.DataFrame.from_dict(entity_dict)
-    entity_df.index = entity_df.index + 1
-
     total_number_of_results = response["meta"]["pagination"]["total"]
 
-    return entity_df, total_number_of_results
+    return entity_list, total_number_of_results
