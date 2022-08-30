@@ -68,26 +68,3 @@ def search_entities(
     total_number_of_results = response["meta"]["pagination"]["total"]
 
     return entity_list, total_number_of_results
-
-
-# def get_parent(lei):
-#     url = "https://api.gleif.org/api/v1/lei-records"
-
-#     params = {"filter[ownedBy]": lei}
-
-#     response = requests.get(url, params=params).json()
-
-#     entity_list = []
-
-#     for json_entity in response["data"]:
-#         new_entity = Entity(
-#             name=json_entity["attributes"]["entity"]["legalName"]["name"],
-#             lei=json_entity["id"],
-#             city=json_entity["attributes"]["entity"]["legalAddress"]["city"],
-#             country=json_entity["attributes"]["entity"]["legalAddress"]["country"],
-#         )
-#         entity_list.append(new_entity)
-
-#     total_number_of_results = response["meta"]["pagination"]["total"]
-
-#     return entity_list, total_number_of_results
