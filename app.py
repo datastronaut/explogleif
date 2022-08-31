@@ -55,8 +55,9 @@ user_input = st.text_input("Search for a company here")
 max_number_of_results = 100
 
 if user_input:
-    entities = explogleif.search_entities(user_input, page_size=max_number_of_results)
-    total_number_of_results = len(entities)
+    entities, total_number_of_results = explogleif.search_entities(
+        user_input, page_size=max_number_of_results
+    )
 
     if total_number_of_results == 0:
         st.error(f'"{user_input}" does not match any entity in GLEIF database.')
