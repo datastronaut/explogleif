@@ -60,4 +60,6 @@ def search_entities(
         new_entity = Entity(json_data=json_entity)
         entities.append(new_entity)
 
-    return entities
+    total_number_of_results = response["meta"]["pagination"]["total"]
+
+    return entities, total_number_of_results
