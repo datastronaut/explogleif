@@ -27,12 +27,7 @@ def latest_status(country=None, category=None, status=None):
 
     # pagination is 1 entity per page, so number of pages = number of entities
     lei_count = response["meta"]["pagination"]["total"]
-    latest_entity = Entity(
-        name=response["data"][0]["attributes"]["entity"]["legalName"]["name"],
-        lei=response["data"][0]["attributes"]["lei"],
-        city=response["data"][0]["attributes"]["entity"]["legalAddress"]["city"],
-        country=response["data"][0]["attributes"]["entity"]["legalAddress"]["country"],
-    )
+    latest_entity = Entity(json_data=response["data"][0])
 
     answer = {"lei_count": lei_count, "latest_entity": latest_entity}
 

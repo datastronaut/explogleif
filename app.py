@@ -42,7 +42,7 @@ latest_entity = gleif_status["latest_entity"]
 
 f"""
 On the {now.strftime("%d of %B %Y at %H:%M")}, there are {lei_count:,} LEIs in total in the GLEIF database.  
-The latest entity registered is {latest_entity.name}, located in {latest_entity.city}, {latest_entity.country}.  
+The latest entity registered is {latest_entity.legal_name}, located in {latest_entity.city}, {latest_entity.country}.  
 Its LEI is {latest_entity.lei}.
 """
 
@@ -70,7 +70,7 @@ if user_input:
             st.success(f'"{user_input}" returns {total_number_of_results} results.')
 
         for idx, entity in enumerate(entities):
-            with st.expander(entity.name):
+            with st.expander(entity.legal_name):
                 st.write(
                     f"""
                          LEI : {entity.lei}  
@@ -84,23 +84,23 @@ if user_input:
                     )
                     if total_number_of_parents == 0:
                         st.write(
-                            f"{entity.name} does not have any parent registered in the GLEIF database"
+                            f"{entity.legal_name} does not have any parent registered in the GLEIF database"
                         )
                     else:
                         if total_number_of_parents == 1:
                             st.write(
-                                f"{entity.name} has 1 parent registered in the GLEIF database"
+                                f"{entity.legal_name} has 1 parent registered in the GLEIF database"
                             )
                         else:
                             st.write(
-                                f"{entity.name} has {total_number_of_parents} parents registered in the GLEIF database"
+                                f"{entity.legal_name} has {total_number_of_parents} parents registered in the GLEIF database"
                             )
 
                         for idx2, parent in enumerate(parents):
                             st.write(
                                 f"""
                                      Parent number {idx2+1}:  
-                                     **{parent.name}**  
+                                     **{parent.legal_name}**  
                                      - LEI: {parent.lei}  
                                      - City:  {parent.city}  
                                      - Country: {parent.country}  
