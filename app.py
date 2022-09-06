@@ -78,10 +78,10 @@ if user_input:
                          """
                 )
 
+                # display a button "Parents" to display the parents of the entity
                 if st.button("Parents", key=f"parents_button_{idx}"):
-                    parents, total_number_of_parents = explogleif.search_entities(
-                        page_size=max_number_of_results, owns=entity.lei
-                    )
+                    parents = entity.get_direct_parents()
+                    total_number_of_parents = len(parents)
                     if total_number_of_parents == 0:
                         st.write(
                             f"{entity.legal_name} does not have any parent registered in the GLEIF database"
@@ -89,23 +89,48 @@ if user_input:
                     else:
                         if total_number_of_parents == 1:
                             st.write(
-                                f"{entity.legal_name} has 1 parent registered in the GLEIF database"
+                                f"The parent of {entity.legal_name} in the GLEIF database is"
                             )
                         else:
                             st.write(
-                                f"{entity.legal_name} has {total_number_of_parents} parents registered in the GLEIF database"
+                                f"The parents of {entity.legal_name} in the GLEIF database are"
                             )
 
-                        for idx2, parent in enumerate(parents):
+                        for parent in parents:
                             st.write(
                                 f"""
-                                     Parent number {idx2+1}:  
-                                     **{parent.legal_name}**  
-                                     - LEI: {parent.lei}  
-                                     - City:  {parent.city}  
-                                     - Country: {parent.country}  
+                                     >**{parent.legal_name}**  
+                                     > LEI: {parent.lei}  
+                                     > City:  {parent.city}  
+                                     > Country: {parent.country}  
+                                       
                                      """
                             )
 
+                # display a button "Children" to display the children of the entity
                 if st.button("Children", key=f"children_button_{idx}"):
-                    st.write("This app cannot display children yet")
+                    children = entity.get_direct_children()
+                    total_number_of_children = len(children)
+                    if total_number_of_children == 0:
+                        st.write(
+                            f"{entity.legal_name} does not have any child registered in the GLEIF database"
+                        )
+                    else:
+                        if total_number_of_children == 1:
+                            st.write(
+                                f"There is only one child of {entity.legal_name} registered in the GLEIF database."
+                            )
+                        else:
+                            st.write(
+                                f"There are {total_number_of_children} children of {entity.legal_name} registered in the GLEIF database."
+                            )
+
+                        for child in children:
+                            st.write(
+                                f"""
+                                     > **{child.legal_name}**  
+                                     > LEI: {child.lei}  
+                                     > City:  {child.city}  
+                                     > Country: {child.country}  
+                                     """
+                            )
