@@ -20,8 +20,14 @@ class Entity:
         self.country = json_data["attributes"]["entity"]["legalAddress"]["country"]
 
     # TODO : method to get parents and children entities
-    def get_direct_parents(self):
+    def get_direct_parents(self, page_size=200):
         pass
 
-    def get_direct_children(self):
-        pass
+    def get_direct_children(self, page_size=200):
+        """
+        Return a list of objects of class Entity that are direct children of self
+        """
+        children_json = requests.get(
+            f"https://api.gleif.org/api/v1/lei-records?filter[ownedBy]={self.lei}&page[size]={page_size}"
+        ).json()["data"]
+        return [Entity(json_data=child_json) for child_json in children_json]
