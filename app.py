@@ -9,18 +9,18 @@ from explogleif import explogleif
 # web page configuration
 st.set_page_config(
     page_title="EXPLO GLEIF - exploration of GLEIF API",
-    page_icon=":cl:",  # Clear Button emoji
+    page_icon="🆑",  # Clear Button emoji
 )
 
 # sidebar
-st.sidebar.markdown(
+with st.sidebar:
+    st.write(
+        """
+    # 🆑 Christian Lajouanie  
+    ## 🧑‍💼 Follow me on [LinkedIn](https://www.linkedin.com/in/christianlajouanie)  
+    ## 🧑‍💻 Check my [GitHub](https://github.com/ClearButton)  
     """
-    App developped by Christian Lajouanie.  
-    :necktie: Follow me on [LinkedIn](https://www.linkedin.com/in/christianlajouanie)  
-    :octopus: Check my [GitHub profile](https://github.com/ClearButton)  
-    :cl:
-    """
-)
+    )
 
 
 """
