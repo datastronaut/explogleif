@@ -1,0 +1,8 @@
+[theme]
+# https://www.happyhues.co/palettes/10
+
+primaryColor = "#f9bc60"
+backgroundColor = "#0f3433"
+secondaryBackgroundColor = "#004643"
+textColor = "#abd1c6"
+font = "sans-serif"
