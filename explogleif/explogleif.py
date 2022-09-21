@@ -4,6 +4,7 @@
 import requests
 import pandas as pd
 from explogleif.entity import Entity
+import graphviz
 
 
 def latest_status(country=None, category=None, status=None):
@@ -58,3 +59,44 @@ def search_entities(
     total_number_of_results = response["meta"]["pagination"]["total"]
 
     return entities, total_number_of_results
+
+
+def create_graph(entity):
+
+    # style
+    graph_attr = {"bgcolor": "#0e1117"}
+    node_attr = {
+        "style": "rounded,filled",
+        "shape": "box",
+        "color": "white",
+        "fontcolor": "white",
+        "fillcolor": "#252d3d",
+    }
+    edge_attr = {"color": "white"}
+
+    dot = graphviz.Digraph(
+        f"graph_{entity.legal_name}",
+        comment=f"parents and children of {entity.legal_name}, lei: {entity.lei}",
+        graph_attr=graph_attr,
+        node_attr=node_attr,
+        edge_attr=edge_attr,
+    )
+
+    dot.attr(ratio="fill")
+
+    # starting node
+    dot.node(entity.lei, entity.legal_name)
+
+    # children nodes
+    for idx, child in enumerate(entity.get_direct_children()):
+        dot.node(child.lei, child.legal_name)
+        dot.edge(entity.lei, child.lei, minlen=str(idx + 1))
+
+    # parents node
+    for parent in entity.get_direct_parents():
+        dot.node(parent.lei, parent.legal_name)
+        dot.edge(parent.lei, entity.lei)
+
+    print(dot.source)
+
+    return dot
