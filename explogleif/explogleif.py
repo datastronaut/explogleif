@@ -82,7 +82,7 @@ def create_graph(entity):
         edge_attr=edge_attr,
     )
 
-    dot.attr(ratio="fill")
+    # dot.attr(ratio="fill")
 
     # starting node
     dot.node(entity.lei, entity.legal_name)
