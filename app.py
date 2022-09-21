@@ -26,6 +26,7 @@ with st.sidebar:
 # EXPLO GLEIF  
 This app is meant to explore the API of the [Global Legal Entity Identifier Foundation](https://www.gleif.org).  
 The API documentation [can be found here](https://documenter.getpostman.com/view/7679680/SVYrrxuU?version=latest#quick-start-guide).  
+___
 """
 
 
@@ -42,7 +43,8 @@ latest_entity = gleif_status["latest_entity"]
 f"""
 On the {now.strftime("%d of %B %Y at %H:%M")}, there are {lei_count:,} LEIs in total in the GLEIF database.  
 The latest entity registered is {latest_entity.legal_name}, located in {latest_entity.city}, {latest_entity.country}.  
-Its LEI is {latest_entity.lei}.
+Its LEI is {latest_entity.lei}.  
+___
 """
 
 """
