@@ -68,14 +68,15 @@ if user_input:
         else:
             st.success(f'"{user_input}" returns {total_number_of_results} results.')
 
-        col1, col2 = st.columns([1, 3])
+        col1, col2 = st.columns([1, 4])
 
         with col1:
 
             for entity in entities:
                 if st.button(f"{entity.legal_name}", key=f"start_button_{entity.lei}"):
                     with col2:
-                        st.write(f"display graphviz of {entity.legal_name}")
+                        dot = explogleif.create_graph(entity)
+                        st.graphviz_chart(dot)
 
                 st.write(
                     f"""
