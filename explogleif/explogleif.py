@@ -64,15 +64,15 @@ def search_entities(
 def create_graph(entity):
 
     # style
-    graph_attr = {"bgcolor": "#0e1117"}
+    graph_attr = {"bgcolor": "#0f3433"}
     node_attr = {
         "style": "rounded,filled",
         "shape": "box",
-        "color": "white",
-        "fontcolor": "white",
-        "fillcolor": "#252d3d",
+        "color": "#f9bc60",
+        "fontcolor": "#abd1c6",
+        "fillcolor": "#004643",
     }
-    edge_attr = {"color": "white"}
+    edge_attr = {"color": "#f9bc60"}
 
     dot = graphviz.Digraph(
         f"graph_{entity.legal_name}",
