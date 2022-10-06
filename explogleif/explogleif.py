@@ -5,6 +5,7 @@ import requests
 import pandas as pd
 from explogleif.entity import Entity
 import graphviz
+import streamlit as st
 
 
 def latest_status(country=None, category=None, status=None):
@@ -63,16 +64,22 @@ def search_entities(
 
 def create_graph(entity):
 
+    # get colors from Streamlit app theme
+    primary_color = st.get_option("theme.primaryColor")
+    background_color = st.get_option("theme.backgroundColor")
+    secondary_background_color = st.get_option("theme.secondaryBackgroundColor")
+    tc = st.get_option("theme.textColor")
+
     # style
-    graph_attr = {"bgcolor": "#0f3433"}
+    graph_attr = {"bgcolor": background_color}
     node_attr = {
         "style": "rounded,filled",
         "shape": "box",
-        "color": "#f9bc60",
-        "fontcolor": "#abd1c6",
-        "fillcolor": "#004643",
+        "color": primary_color,
+        "fontcolor": tc,
+        "fillcolor": secondary_background_color,
     }
-    edge_attr = {"color": "#f9bc60"}
+    edge_attr = {"color": primary_color}
 
     dot = graphviz.Digraph(
         f"graph_{entity.legal_name}",
