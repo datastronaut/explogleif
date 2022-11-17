@@ -94,14 +94,16 @@ def create_graph(entity):
     # starting node
     dot.node(entity.lei, entity.legal_name)
 
-    # children nodes
-    for idx, child in enumerate(entity.get_direct_children()):
-        dot.node(child.lei, child.legal_name)
-        dot.edge(entity.lei, child.lei, minlen=str(idx + 1))
+    # direct children nodes
+    if entity.get_direct_children():
+        for idx, child in enumerate(entity.get_direct_children()):
+            dot.node(child.lei, child.legal_name)
+            dot.edge(entity.lei, child.lei, minlen=str(idx + 1))
 
-    # parents node
-    dot.node(entity.get_direct_parent().lei, entity.get_direct_parent().legal_name)
-    dot.edge(entity.get_direct_parent().lei, entity.lei)
+    # direct parent node
+    if entity.get_direct_parent():
+        dot.node(entity.get_direct_parent().lei, entity.get_direct_parent().legal_name)
+        dot.edge(entity.get_direct_parent().lei, entity.lei)
 
     print(dot.source)
 
