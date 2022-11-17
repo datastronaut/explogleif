@@ -92,7 +92,7 @@ def create_graph(entity):
     # dot.attr(ratio="fill")
 
     # starting node
-    dot.node(entity.lei, entity.legal_name)
+    dot.node(entity.lei, entity.legal_name, fillcolor="#E8E057")
 
     # direct children nodes
     if entity.get_direct_children():
