@@ -83,7 +83,7 @@ def create_graph(entity):
 
     dot = graphviz.Digraph(
         f"graph_{entity.legal_name}",
-        comment=f"parents and children of {entity.legal_name}, lei: {entity.lei}",
+        comment=f"graph of {entity.legal_name}, lei: {entity.lei}",
         graph_attr=graph_attr,
         node_attr=node_attr,
         edge_attr=edge_attr,
@@ -100,9 +100,8 @@ def create_graph(entity):
         dot.edge(entity.lei, child.lei, minlen=str(idx + 1))
 
     # parents node
-    for parent in entity.get_direct_parents():
-        dot.node(parent.lei, parent.legal_name)
-        dot.edge(parent.lei, entity.lei)
+    dot.node(entity.get_direct_parent().lei, entity.get_direct_parent().legal_name)
+    dot.edge(entity.get_direct_parent().lei, entity.lei)
 
     print(dot.source)
 
