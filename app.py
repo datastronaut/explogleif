@@ -24,15 +24,12 @@ with st.sidebar:
 
 """
 # EXPLO GLEIF  
-This app is meant to explore the API of the [Global Legal Entity Identifier Foundation](https://www.gleif.org).  
-The API documentation [can be found here](https://documenter.getpostman.com/view/7679680/SVYrrxuU?version=latest#quick-start-guide).  
-___
+This app is meant to help identifying the relationships between companies.  
+It is based on the incredible work of the [Global Legal Entity Identifier Foundation](https://www.gleif.org) (GLEIF).  
+They maintain a huge database with millions of companies accross the world and the relationships between them.  
+They also provide a [well documented API](https://www.gleif.org/en/lei-data/gleif-api) to allow developers to explore their data.      
 """
 
-
-"""  
-### Current status of the GLEIF database 
-"""
 now = datetime.now()
 gleif_status = explogleif.latest_status()
 
@@ -42,8 +39,7 @@ latest_entity = gleif_status["latest_entity"]
 
 f"""
 On the {now.strftime("%d of %B %Y at %H:%M")}, there are {lei_count:,} LEIs in total in the GLEIF database.  
-The latest entity registered is {latest_entity.legal_name}, located in {latest_entity.city}, {latest_entity.country}.  
-Its LEI is {latest_entity.lei}.  
+The latest entity registered is {latest_entity.legal_name}, located in {latest_entity.city}, {latest_entity.country}. Its LEI is {latest_entity.lei}.  
 ___
 """
 
