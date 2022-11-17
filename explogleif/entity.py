@@ -19,20 +19,33 @@ class Entity:
         self.city = json_data["attributes"]["entity"]["legalAddress"]["city"]
         self.country = json_data["attributes"]["entity"]["legalAddress"]["country"]
 
-    def get_direct_parent(self, page_size=200):
+    def get_direct_parent(self):
         """
-        Return an objects of class Entity that is direct parents of self
+        Return an object of class Entity that is the direct parent of self
         """
-        parent_json = requests.get(
+        response = requests.get(
             f"https://api.gleif.org/api/v1/lei-records/{self.lei}/direct-parent"
-        ).json()["data"]
-        return Entity(json_data=parent_json)
+        )
+        if response.status_code == 200:
+            direct_parent = Entity(response.json()["data"])
+        else:
+            direct_parent = None
+        return direct_parent
 
-    def get_direct_children(self, page_size=200):
+    def get_direct_children(self):
         """
         Return a list of objects of class Entity that are direct children of self
         """
-        children_json = requests.get(
+
+        response = requests.get(
             f"https://api.gleif.org/api/v1/lei-records/{self.lei}/direct-children"
-        ).json()["data"]
-        return [Entity(json_data=child_json) for child_json in children_json]
+        )
+
+        if response.status_code == 200:
+            direct_children = [
+                Entity(json_data=child_json) for child_json in response.json()["data"]
+            ]
+        else:
+            direct_children = None
+
+        return direct_children
