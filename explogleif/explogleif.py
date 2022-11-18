@@ -94,11 +94,24 @@ def create_graph(entity):
     # starting node (with a yellow fillcolor)
     dot.node(entity.lei, entity.legal_name, fillcolor="#E8E057")
 
-    # direct children nodes
+    # children nodes
     if entity.get_direct_children():
-        for idx, child in enumerate(entity.get_direct_children()):
+
+        # children level 1
+        for i, child in enumerate(entity.get_direct_children()):
             dot.node(child.lei, child.legal_name)
-            dot.edge(entity.lei, child.lei, minlen=str(idx + 1))
+            dot.edge(entity.lei, child.lei, minlen=str(i + 1))
+
+            # grand children (level 2)
+            for j, grandchild in enumerate(child.get_direct_children()):
+                dot.node(grandchild.lei, grandchild.legal_name)
+                dot.edge(child.lei, grandchild.lei, minlen=str(j + 1))
+
+                ## grand grand children (level 3) - performance issues (test with Bouygues group)
+                ## if performance issues solved : think about a recursive function down to the bottom of the tree
+                # for k, grandgrandchild in enumerate(child.get_direct_children()):
+                #     dot.node(grandgrandchild.lei, grandgrandchild.legal_name)
+                #     dot.edge(child.lei, grandgrandchild.lei, minlen=str(k + 1))
 
     # direct parent node
     if entity.get_direct_parent():
