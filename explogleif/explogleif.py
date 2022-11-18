@@ -62,6 +62,15 @@ def search_entities(
     return entities, total_number_of_results
 
 
+def graph_children(dot, entity, children):
+    for i, child in enumerate(children):
+        if child.get_direct_children():
+            graph_children(dot, child, child.get_direct_children())
+        else:
+            dot.node(child.lei, child.legal_name)
+            dot.edge(entity.lei, child.lei, minlen=str(i + 1))
+
+
 def create_graph(entity):
 
     # get colors from Streamlit app theme
