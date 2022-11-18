@@ -4,6 +4,8 @@
 import requests
 import pandas as pd
 from explogleif.entity import Entity
+import graphviz
+import streamlit as st
 
 
 def latest_status(country=None, category=None, status=None):
@@ -58,3 +60,51 @@ def search_entities(
     total_number_of_results = response["meta"]["pagination"]["total"]
 
     return entities, total_number_of_results
+
+
+def create_graph(entity):
+
+    # get colors from Streamlit app theme
+    primary_color = st.get_option("theme.primaryColor")
+    background_color = st.get_option("theme.backgroundColor")
+    secondary_background_color = st.get_option("theme.secondaryBackgroundColor")
+    tc = st.get_option("theme.textColor")
+
+    # style
+    graph_attr = {"bgcolor": background_color}
+    node_attr = {
+        "style": "rounded,filled",
+        "shape": "box",
+        "color": primary_color,
+        "fontcolor": tc,
+        "fillcolor": secondary_background_color,
+    }
+    edge_attr = {"color": primary_color}
+
+    dot = graphviz.Digraph(
+        f"graph_{entity.legal_name}",
+        comment=f"graph of {entity.legal_name}, lei: {entity.lei}",
+        graph_attr=graph_attr,
+        node_attr=node_attr,
+        edge_attr=edge_attr,
+    )
+
+    # dot.attr(ratio="fill")
+
+    # starting node (with a yellow fillcolor)
+    dot.node(entity.lei, entity.legal_name, fillcolor="#E8E057")
+
+    # direct children nodes
+    if entity.get_direct_children():
+        for idx, child in enumerate(entity.get_direct_children()):
+            dot.node(child.lei, child.legal_name)
+            dot.edge(entity.lei, child.lei, minlen=str(idx + 1))
+
+    # direct parent node
+    if entity.get_direct_parent():
+        dot.node(entity.get_direct_parent().lei, entity.get_direct_parent().legal_name)
+        dot.edge(entity.get_direct_parent().lei, entity.lei)
+
+    print(dot.source)
+
+    return dot

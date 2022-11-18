@@ -8,8 +8,7 @@ from explogleif import explogleif
 
 # web page configuration
 st.set_page_config(
-    page_title="EXPLO GLEIF - exploration of GLEIF API",
-    page_icon="🆑",  # Clear Button emoji
+    page_title="EXPLO GLEIF - exploration of GLEIF API", page_icon="🆑", layout="wide"
 )
 
 # sidebar
@@ -25,14 +24,12 @@ with st.sidebar:
 
 """
 # EXPLO GLEIF  
-This app is meant to explore the API of the [Global Legal Entity Identifier Foundation](https://www.gleif.org).  
-The API documentation [can be found here](https://documenter.getpostman.com/view/7679680/SVYrrxuU?version=latest#quick-start-guide).  
+This app is meant to help identifying the relationships between companies.  
+It is based on the incredible work of the [Global Legal Entity Identifier Foundation](https://www.gleif.org) (GLEIF).  
+They maintain a huge database with millions of companies accross the world and the relationships between them.  
+They also provide a [well documented API](https://www.gleif.org/en/lei-data/gleif-api) to allow developers to explore their data.      
 """
 
-
-"""  
-### Current status of the GLEIF database 
-"""
 now = datetime.now()
 gleif_status = explogleif.latest_status()
 
@@ -42,8 +39,8 @@ latest_entity = gleif_status["latest_entity"]
 
 f"""
 On the {now.strftime("%d of %B %Y at %H:%M")}, there are {lei_count:,} LEIs in total in the GLEIF database.  
-The latest entity registered is {latest_entity.legal_name}, located in {latest_entity.city}, {latest_entity.country}.  
-Its LEI is {latest_entity.lei}.
+The latest entity registered is {latest_entity.legal_name}, located in {latest_entity.city}, {latest_entity.country}. Its LEI is {latest_entity.lei}.  
+___
 """
 
 """
@@ -69,68 +66,21 @@ if user_input:
         else:
             st.success(f'"{user_input}" returns {total_number_of_results} results.')
 
-        for idx, entity in enumerate(entities):
-            with st.expander(entity.legal_name):
+        col1, col2 = st.columns([1, 4])
+
+        with col1:
+
+            for entity in entities:
+                if st.button(f"{entity.legal_name}", key=f"start_button_{entity.lei}"):
+                    with col2:
+                        dot = explogleif.create_graph(entity)
+                        st.graphviz_chart(dot)
+
                 st.write(
                     f"""
-                         LEI : {entity.lei}  
-                         Location: {entity.city}, {entity.country}
-                         """
+                        *{entity.city}*, *{entity.country}*   
+                        LEI : {entity.lei}
+                    """
                 )
 
-                # display a button "Parents" to display the parents of the entity
-                if st.button("Parents", key=f"parents_button_{idx}"):
-                    parents = entity.get_direct_parents()
-                    total_number_of_parents = len(parents)
-                    if total_number_of_parents == 0:
-                        st.write(
-                            f"{entity.legal_name} does not have any parent registered in the GLEIF database"
-                        )
-                    else:
-                        if total_number_of_parents == 1:
-                            st.write(
-                                f"The parent of {entity.legal_name} in the GLEIF database is"
-                            )
-                        else:
-                            st.write(
-                                f"The parents of {entity.legal_name} in the GLEIF database are"
-                            )
-
-                        for parent in parents:
-                            st.write(
-                                f"""
-                                     >**{parent.legal_name}**  
-                                     > LEI: {parent.lei}  
-                                     > City:  {parent.city}  
-                                     > Country: {parent.country}  
-                                       
-                                     """
-                            )
-
-                # display a button "Children" to display the children of the entity
-                if st.button("Children", key=f"children_button_{idx}"):
-                    children = entity.get_direct_children()
-                    total_number_of_children = len(children)
-                    if total_number_of_children == 0:
-                        st.write(
-                            f"{entity.legal_name} does not have any child registered in the GLEIF database"
-                        )
-                    else:
-                        if total_number_of_children == 1:
-                            st.write(
-                                f"There is only one child of {entity.legal_name} registered in the GLEIF database."
-                            )
-                        else:
-                            st.write(
-                                f"There are {total_number_of_children} children of {entity.legal_name} registered in the GLEIF database."
-                            )
-
-                        for child in children:
-                            st.write(
-                                f"""
-                                     > **{child.legal_name}**  
-                                     > LEI: {child.lei}  
-                                     > City:  {child.city}  
-                                     > Country: {child.country}  
-                                     """
-                            )
+                st.write("""___""")
