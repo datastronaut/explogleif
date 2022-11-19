@@ -63,15 +63,20 @@ def search_entities(
 
 
 def graph_children(dot, entity, children):
-    for i, child in enumerate(children):
-        if child.get_direct_children():
-            graph_children(dot, child, child.get_direct_children())
-        else:
+    if children:
+        for i, child in enumerate(children):
             dot.node(child.lei, child.legal_name)
             dot.edge(entity.lei, child.lei, minlen=str(i + 1))
 
+            if child.get_direct_children():
+                dot = graph_children(dot, child, child.get_direct_children())
+
+    return dot
+
 
 def create_graph(entity):
+
+    print("Start")
 
     # get colors from Streamlit app theme
     primary_color = st.get_option("theme.primaryColor")
@@ -103,30 +108,16 @@ def create_graph(entity):
     # starting node (with a yellow fillcolor)
     dot.node(entity.lei, entity.legal_name, fillcolor="#E8E057")
 
-    # children nodes
-    if entity.get_direct_children():
-
-        # children level 1
-        for i, child in enumerate(entity.get_direct_children()):
-            dot.node(child.lei, child.legal_name)
-            dot.edge(entity.lei, child.lei, minlen=str(i + 1))
-
-            # grand children (level 2)
-            for j, grandchild in enumerate(child.get_direct_children()):
-                dot.node(grandchild.lei, grandchild.legal_name)
-                dot.edge(child.lei, grandchild.lei, minlen=str(j + 1))
-
-                ## grand grand children (level 3) - performance issues (test with Bouygues group)
-                ## if performance issues solved : think about a recursive function down to the bottom of the tree
-                # for k, grandgrandchild in enumerate(child.get_direct_children()):
-                #     dot.node(grandgrandchild.lei, grandgrandchild.legal_name)
-                #     dot.edge(child.lei, grandgrandchild.lei, minlen=str(k + 1))
+    # graph children nodes
+    dot = graph_children(dot, entity, entity.get_direct_children())
 
     # direct parent node
     if entity.get_direct_parent():
         dot.node(entity.get_direct_parent().lei, entity.get_direct_parent().legal_name)
         dot.edge(entity.get_direct_parent().lei, entity.lei)
 
+    print("dot final")
     print(dot.source)
+    print("----------------------------------------------------")
 
     return dot
