@@ -32,13 +32,13 @@ class Entity:
             direct_parent = None
         return direct_parent
 
-    def get_direct_children(self):
+    def get_direct_children(self, limit=200):
         """
         Return a list of objects of class Entity that are direct children of self
         """
 
         response = requests.get(
-            f"https://api.gleif.org/api/v1/lei-records/{self.lei}/direct-children"
+            f"https://api.gleif.org/api/v1/lei-records/{self.lei}/direct-children?page[size]={limit}"
         )
 
         if response.status_code == 200:
