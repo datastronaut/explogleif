@@ -7,6 +7,9 @@ from explogleif.entity import Entity
 import graphviz
 import streamlit as st
 
+# constant to limit the number of children in the graphs
+CHILDREN_LIMIT = 50
+
 
 def latest_status(country=None, category=None, status=None):
     url = "https://api.gleif.org/api/v1/lei-records"
@@ -68,8 +71,10 @@ def graph_children(dot, entity, children):
             dot.node(child.lei, child.legal_name)
             dot.edge(entity.lei, child.lei, minlen=str(i + 1))
 
-            if child.get_direct_children():
-                dot = graph_children(dot, child, child.get_direct_children())
+            if child.get_direct_children(limit=CHILDREN_LIMIT):
+                dot = graph_children(
+                    dot, child, child.get_direct_children(limit=CHILDREN_LIMIT)
+                )
 
     return dot
 
@@ -109,7 +114,7 @@ def create_graph(entity):
     dot.node(entity.lei, entity.legal_name, fillcolor="#E8E057")
 
     # graph children nodes
-    dot = graph_children(dot, entity, entity.get_direct_children())
+    dot = graph_children(dot, entity, entity.get_direct_children(limit=CHILDREN_LIMIT))
 
     # direct parent node
     if entity.get_direct_parent():
