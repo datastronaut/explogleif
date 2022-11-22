@@ -42,43 +42,48 @@ ___
 """
 
 """
-### Search for an Entity
+### Graph of an entity
 """
 
-user_input = st.text_input("Search for a company here")
+user_input = st.text_input("Search below the entity below to graph")
 
-max_number_of_results = 100
+# constant to limit the number of results to display
+RESULTS_MAX_LIMIT = 100
 
 if user_input:
     entities, total_number_of_results = explogleif.search_entities(
-        user_input, page_size=max_number_of_results
+        user_input, page_size=RESULTS_MAX_LIMIT
     )
 
     if total_number_of_results == 0:
-        st.error(f'"{user_input}" does not match any entity in GLEIF database.')
+        st.error(
+            f'😩 Oh no! "{user_input}" does not match any entity in GLEIF database.'
+        )
     else:
-        if total_number_of_results > max_number_of_results:
+        if total_number_of_results > RESULTS_MAX_LIMIT:
             st.warning(
-                f'"{user_input}" returns {total_number_of_results} results. Only the first {max_number_of_results} results are displayed here.'
+                f'⚠️ "{user_input}" returns too many results ({total_number_of_results}). Only the first {RESULTS_MAX_LIMIT} results can be selected in the list below.'
             )
         else:
-            st.success(f'"{user_input}" returns {total_number_of_results} results.')
+            st.info(f'✅ "{user_input}" returns {total_number_of_results} results.')
 
-        col1, col2 = st.columns([1, 4])
+        default_selection = ["Select an entity"]
 
-        with col1:
+        selected_entity = st.selectbox(
+            "Select below the entity you would like to graph",
+            default_selection
+            + [
+                f"{entity.legal_name.upper()}, {entity.city.title()}, {entity.country}. LEI: {entity.lei}"
+                for entity in entities
+            ],
+            label_visibility="visible",
+        )
 
+        if selected_entity != default_selection:
+            selected_lei = selected_entity[-20:]
             for entity in entities:
-                if st.button(f"{entity.legal_name}", key=f"start_button_{entity.lei}"):
-                    with col2:
+                if entity.lei == selected_lei:
+                    with st.spinner("Graph under construction"):
                         dot = explogleif.create_graph(entity)
-                        st.graphviz_chart(dot)
-
-                st.write(
-                    f"""
-                        *{entity.city}*, *{entity.country}*   
-                        LEI : {entity.lei}
-                    """
-                )
-
-                st.write("""___""")
+                    st.write("See below the graph of " + f"{entity.legal_name}".title())
+                    st.graphviz_chart(dot, True)
