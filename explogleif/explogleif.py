@@ -65,16 +65,37 @@ def search_entities(
     return entities, total_number_of_results
 
 
-def graph_children(dot, entity, children):
+def graph_children(dot, entity):
+    """
+    This function adds all the children, grandchildren and so on, of an entity inside a dot.
+    """
+    children = entity.get_direct_children(limit=CHILDREN_LIMIT)
+
     if children:
         for i, child in enumerate(children):
             dot.node(child.lei, child.legal_name)
             dot.edge(entity.lei, child.lei, minlen=str(i + 1))
 
             if child.get_direct_children(limit=CHILDREN_LIMIT):
-                dot = graph_children(
-                    dot, child, child.get_direct_children(limit=CHILDREN_LIMIT)
-                )
+                # let's get recursive !!!!
+                dot = graph_children(dot, child)
+
+    return dot
+
+
+def graph_parent(dot, entity):
+    """
+    This function adds the parent, grandparent and so on, of an entity inside a dot.
+    """
+    parent = entity.get_direct_parent()
+
+    if parent:
+        dot.node(parent.lei, parent.legal_name)
+        dot.edge(parent.lei, entity.lei)
+
+        if parent.get_direct_parent():
+            # let's get recursive !!!!
+            dot = graph_parent(dot, parent)
 
     return dot
 
@@ -87,7 +108,7 @@ def create_graph(entity):
     primary_color = st.get_option("theme.primaryColor")
     background_color = st.get_option("theme.backgroundColor")
     secondary_background_color = st.get_option("theme.secondaryBackgroundColor")
-    tc = st.get_option("theme.textColor")
+    textcolor = st.get_option("theme.textColor")
 
     # style
     graph_attr = {"bgcolor": background_color}
@@ -95,7 +116,7 @@ def create_graph(entity):
         "style": "rounded,filled",
         "shape": "box",
         "color": primary_color,
-        "fontcolor": tc,
+        "fontcolor": textcolor,
         "fillcolor": secondary_background_color,
     }
     edge_attr = {"color": primary_color}
@@ -114,12 +135,10 @@ def create_graph(entity):
     dot.node(entity.lei, entity.legal_name, fillcolor="#E8E057")
 
     # graph children nodes
-    dot = graph_children(dot, entity, entity.get_direct_children(limit=CHILDREN_LIMIT))
+    dot = graph_children(dot, entity)
 
     # direct parent node
-    if entity.get_direct_parent():
-        dot.node(entity.get_direct_parent().lei, entity.get_direct_parent().legal_name)
-        dot.edge(entity.get_direct_parent().lei, entity.lei)
+    dot = graph_parent(dot, entity)
 
     print("dot final")
     print(dot.source)
