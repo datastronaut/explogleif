@@ -108,7 +108,7 @@ def create_graph(entity):
     primary_color = st.get_option("theme.primaryColor")
     background_color = st.get_option("theme.backgroundColor")
     secondary_background_color = st.get_option("theme.secondaryBackgroundColor")
-    tc = st.get_option("theme.textColor")
+    textcolor = st.get_option("theme.textColor")
 
     # style
     graph_attr = {"bgcolor": background_color}
@@ -116,7 +116,7 @@ def create_graph(entity):
         "style": "rounded,filled",
         "shape": "box",
         "color": primary_color,
-        "fontcolor": tc,
+        "fontcolor": textcolor,
         "fillcolor": secondary_background_color,
     }
     edge_attr = {"color": primary_color}
