@@ -8,16 +8,17 @@ from explogleif import explogleif
 
 # web page configuration
 st.set_page_config(
-    page_title="EXPLO GLEIF - exploration of GLEIF API", page_icon="🆑", layout="wide"
+    page_title="EXPLO GLEIF - exploration of GLEIF API", page_icon="🧑‍🚀", layout="wide"
 )
 
 # sidebar
 with st.sidebar:
     st.write(
         """
-    # 🆑 Christian Lajouanie  
+    # Christian Lajouanie  
+    ## 🧑‍🚀 Freelance at Datastronaut
     ## 🧑‍💼 Follow me on [LinkedIn](https://www.linkedin.com/in/christianlajouanie)  
-    ## 🧑‍💻 Check my [GitHub](https://github.com/ClearButton)  
+    ## 🧑‍💻 Check my [GitHub](https://github.com/datastronaut)  
     """
     )
 
